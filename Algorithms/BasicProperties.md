@@ -1,1 +1,328 @@
 
+# Chi Tiết Các Tính Chất Cơ Bản của OOP trong Java
+
+Dưới đây là giải thích chi tiết về 4 tính chất cơ bản của lập trình hướng đối tượng (OOP) trong Java:
+
+## 1. Tính Đóng Gói (Encapsulation)
+
+- Che giấu thông tin và bảo vệ dữ liệu
+
+- Sử dụng access modifier (private, protected, public)
+
+- Sử dụng getter/setter để truy cập dữ liệu
+
+### Ví dụ chi tiết:
+```java
+public class BankAccount {
+    // Thuộc tính private - không thể truy cập trực tiếp từ bên ngoài
+    private String accountNumber;
+    private double balance;
+    
+    // Constructor
+    public BankAccount(String accountNumber, double initialBalance) {
+        this.accountNumber = accountNumber;
+        this.balance = initialBalance;
+    }
+    
+    // Public methods - giao diện để tương tác với đối tượng
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            System.out.println("Deposit successful. New balance: " + balance);
+        } else {
+            System.out.println("Invalid deposit amount");
+        }
+    }
+    
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrawal successful. New balance: " + balance);
+        } else {
+            System.out.println("Invalid withdrawal amount or insufficient funds");
+        }
+    }
+    
+    // Getter methods
+    public double getBalance() {
+        return balance;
+    }
+    
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+    
+    // Không cung cấp setter cho balance để đảm bảo tính toàn vẹn dữ liệu
+}
+```
+
+### Ưu điểm:
+- Bảo vệ dữ liệu khỏi truy cập trái phép
+- Dễ dàng thay đổi triển khai bên trong mà không ảnh hưởng code bên ngoài
+- Kiểm soát tính hợp lệ của dữ liệu (validation)
+
+## 2. Tính Kế Thừa (Inheritance)
+
+### Khái niệm:
+Cho phép một lớp (lớp con) kế thừa các thuộc tính và phương thức từ một lớp khác (lớp cha), giúp tái sử dụng code.
+
+### Triển khai:
+- Lớp con kế thừa từ lớp cha
+
+- Sử dụng từ khóa extends
+
+- Tái sử dụng code
+
+### Ví dụ chi tiết:
+```java
+// Lớp cha
+class Employee {
+    private String name;
+    private int id;
+    private double salary;
+    
+    public Employee(String name, int id, double salary) {
+        this.name = name;
+        this.id = id;
+        this.salary = salary;
+    }
+    
+    public void work() {
+        System.out.println(name + " is working");
+    }
+    
+    public void displayInfo() {
+        System.out.println("ID: " + id + ", Name: " + name + ", Salary: " + salary);
+    }
+    
+    // Getter methods
+    public double getSalary() {
+        return salary;
+    }
+}
+
+// Lớp con kế thừa từ Employee
+class Manager extends Employee {
+    private String department;
+    
+    public Manager(String name, int id, double salary, String department) {
+        super(name, id, salary); // Gọi constructor của lớp cha
+        this.department = department;
+    }
+    
+    // Ghi đè phương thức
+    @Override
+    public void displayInfo() {
+        super.displayInfo(); // Gọi phương thức của lớp cha
+        System.out.println("Department: " + department);
+    }
+    
+    // Phương thức mới chỉ có ở Manager
+    public void manageTeam() {
+        System.out.println("Managing the " + department + " department");
+    }
+}
+```
+
+### Ưu điểm:
+- Tái sử dụng code hiệu quả
+- Tạo hệ thống phân cấp rõ ràng
+- Dễ bảo trì và mở rộng
+
+### Lưu ý:
+- Java không hỗ trợ đa kế thừa lớp (một lớp chỉ extends một lớp cha)
+- Từ khóa `super` dùng để truy cập thành phần của lớp cha
+- Có thể sử dụng `super()` để gọi constructor của lớp cha
+
+## 3. Tính Đa Hình (Polymorphism)
+
+### Khái niệm:
+Khả năng một đối tượng có nhiều hình thái
+
+### Có 2 loại đa hình:
+1. **Đa hình tại thời điểm biên dịch (Compile-time Polymorphism)**
+   - Thực hiện qua nạp chồng phương thức (method overloading)
+   
+2. **Đa hình tại thời điểm chạy (Runtime Polymorphism)**
+   - Thực hiện qua ghi đè phương thức (method overriding)
+
+### Ví dụ chi tiết:
+
+#### a. Nạp chồng phương thức (Overloading)
+```java
+class Calculator {
+    // Cùng tên phương thức nhưng khác tham số
+    public int add(int a, int b) {
+        return a + b;
+    }
+    
+    public double add(double a, double b) {
+        return a + b;
+    }
+    
+    public int add(int a, int b, int c) {
+        return a + b + c;
+    }
+    
+    public String add(String a, String b) {
+        return a + b;
+    }
+}
+```
+
+#### b. Ghi đè phương thức (Overriding)
+```java
+class Animal {
+    public void makeSound() {
+        System.out.println("Animal makes a sound");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    public void makeSound() {
+        System.out.println("Dog barks");
+    }
+}
+
+class Cat extends Animal {
+    @Override
+    public void makeSound() {
+        System.out.println("Cat meows");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal myAnimal = new Animal();  // Animal object
+        Animal myDog = new Dog();        // Dog object
+        Animal myCat = new Cat();        // Cat object
+        
+        myAnimal.makeSound();  // Output: Animal makes a sound
+        myDog.makeSound();     // Output: Dog barks
+        myCat.makeSound();     // Output: Cat meows
+    }
+}
+```
+
+### Ưu điểm:
+- Code linh hoạt, dễ mở rộng
+- Giảm sự phụ thuộc giữa các lớp
+- Tăng khả năng tái sử dụng code
+
+## 4. Tính Trừu Tượng (Abstraction)
+
+- Ẩn chi tiết triển khai, chỉ hiển thị chức năng
+
+- Sử dụng **abstract class** và **interface**
+
+### Ví dụ chi tiết:
+
+#### a. Abstract class
+```java
+abstract class Shape {
+    // Phương thức trừu tượng (không có thân)
+    public abstract double calculateArea();
+    
+    // Phương thức thông thường
+    public void display() {
+        System.out.println("This is a shape");
+    }
+}
+
+class Circle extends Shape {
+    private double radius;
+    
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+    
+    @Override
+    public double calculateArea() {
+        return Math.PI * radius * radius;
+    }
+}
+
+class Rectangle extends Shape {
+    private double length;
+    private double width;
+    
+    public Rectangle(double length, double width) {
+        this.length = length;
+        this.width = width;
+    }
+    
+    @Override
+    public double calculateArea() {
+        return length * width;
+    }
+}
+```
+
+#### b. Interface
+```java
+interface Vehicle {
+    // Phương thức trừu tượng (mặc định public abstract)
+    void start();
+    void stop();
+    
+    // Từ Java 8 có thể có phương thức mặc định
+    default void honk() {
+        System.out.println("Beep beep!");
+    }
+    
+    // Từ Java 8 có thể có phương thức static
+    static int getNumberOfWheels() {
+        return 4;
+    }
+}
+
+class Car implements Vehicle {
+    @Override
+    public void start() {
+        System.out.println("Car started");
+    }
+    
+    @Override
+    public void stop() {
+        System.out.println("Car stopped");
+    }
+}
+
+class Bike implements Vehicle {
+    @Override
+    public void start() {
+        System.out.println("Bike started");
+    }
+    
+    @Override
+    public void stop() {
+        System.out.println("Bike stopped");
+    }
+    
+    // Có thể override phương thức mặc định
+    @Override
+    public void honk() {
+        System.out.println("Bike bell rings");
+    }
+}
+```
+
+### So sánh Abstract class và Interface:
+| Đặc điểm                | Abstract class                     | Interface                          |
+|-------------------------|------------------------------------|------------------------------------|
+| Từ khóa                 | `abstract class`                  | `interface`                       |
+| Phương thức             | Có thể có cả abstract và non-abstract | Chỉ abstract (trước Java 8)       |
+| Biến                    | Có thể có biến instance           | Chỉ có hằng số (public static final) |
+| Đa kế thừa             | Không hỗ trợ                      | Hỗ trợ (một lớp implements nhiều interface) |
+| Constructor             | Có thể có                         | Không có                          |
+| Mục đích               | Cho các lớp có quan hệ "is-a" gần | Cho các lớp có hành vi chung       |
+| Phương thức mặc định    | Có từ đầu                         | Thêm từ Java 8                     |
+
+### Ưu điểm của tính trừu tượng:
+- Giảm độ phức tạp bằng cách ẩn chi tiết triển khai
+- Tập trung vào "cái gì" thay vì "làm thế nào"
+- Dễ dàng thay đổi triển khai mà không ảnh hưởng đến code sử dụng
+- Hỗ trợ thiết kế hệ thống module hóa
+
+Các tính chất OOP này làm việc cùng nhau để tạo ra các ứng dụng Java mạnh mẽ, dễ bảo trì và mở rộng.
